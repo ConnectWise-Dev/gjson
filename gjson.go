@@ -201,7 +201,7 @@ func (t Result) Array() []Result {
 	}
 	r := t.arrayOrMap('[', false)
 
-	if len(r.a) != len(t.Indexes) && len(t.Indexes) != 0 {
+	if (len(r.a) != len(t.Indexes) && len(t.Indexes) != 0) || (len(r.a) > 0 && r.a[0].Type == JSON) {
 		var all []Result
 
 		all = parseNestedArray(r.a, t.Indexes)
@@ -236,6 +236,16 @@ func parseNestedArray(results []Result, indexes []int) (all []Result) {
 		}
 
 		all = append(all, nested...)
+	} else {
+		for _, res := range results {
+			if !res.IsArray() {
+				all = append(all, res)
+				continue
+			}
+			for _, r := range res.Array() {
+				all = append(all, r)
+			}
+		}
 	}
 
 	return all
