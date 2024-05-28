@@ -2871,6 +2871,27 @@ func TestNestedArray(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:     "object_nested_array_to_values",
+			jsonPath: "tickets.#.assets.#.id",
+			body:     `{"tickets":[{"id":"ticket-id-1","assets":[{"id":"asset-id-1"}]},{"id":"ticket-id-2","assets":[{"id":"asset-id-2"}]}],"totalCount":2}`,
+			res: []Result{
+				{
+					Type:  String,
+					Raw:   `"asset-id-1"`,
+					Str:   "asset-id-1",
+					Num:   0,
+					Index: 48,
+				},
+				{
+					Type:  String,
+					Raw:   `"asset-id-2"`,
+					Str:   "asset-id-2",
+					Num:   0,
+					Index: 100,
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
